@@ -1,21 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{96404092-DAD7-4E31-846E-BCBAABF0D025}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <ProjectGuid>{470C65B5-8CBB-4998-87A9-F06CC10B6285}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>GeoPatGenerator</RootNamespace>
-    <AssemblyName>GeoPatGenerator</AssemblyName>
+    <RootNamespace>Emash.GeoPat.Modules.Data</RootNamespace>
+    <AssemblyName>Modules.Data</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -25,7 +22,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -58,100 +54,76 @@
     <Reference Include="Microsoft.Practices.Unity.Configuration">
       <HintPath>..\..\packages\Unity.2.1.505.2\lib\NET35\Microsoft.Practices.Unity.Configuration.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.Data" />
+    <Reference Include="System.Core" />
     <Reference Include="System.Data.Entity" />
     <Reference Include="System.Windows.Interactivity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Prism.4.1.0.0\lib\NET40\System.Windows.Interactivity.dll</HintPath>
     </Reference>
-    <Reference Include="System.Xml" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Core" />
+    <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Xaml">
-      <RequiredTargetFramework>4.0</RequiredTargetFramework>
-    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
     <Reference Include="WindowsBase" />
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <ApplicationDefinition Include="App.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </ApplicationDefinition>
-    <Compile Include="Bootstrapper.cs" />
-    <Compile Include="IO\CodeDataContextWriter.cs" />
-    <Compile Include="IO\CodeDataEntityWriter.cs" />
-    <Compile Include="IO\PowerAmcMpdReader.cs" />
-    <Compile Include="IO\ProjectReader.cs" />
-    <Compile Include="IO\ProjectWriter.cs" />
-    <Compile Include="IO\SqlPostgreWriter.cs" />
-    <Compile Include="ViewModel\DbSchemaViewModel.cs" />
-    <Compile Include="ViewModel\MainViewModel.cs" />
-    <Compile Include="ViewModel\ProjectViewModel.cs" />
-    <Compile Include="Views\MainView.xaml.cs">
-      <DependentUpon>MainView.xaml</DependentUpon>
+    <Compile Include="Models\Configuration.cs" />
+    <Compile Include="Models\ConfigurationProviderParameter.cs" />
+    <Compile Include="Models\ConfigurationProviderType.cs" />
+    <Compile Include="Models\ConfigurationProviderTypeMysql.cs" />
+    <Compile Include="Models\ConfigurationProviderTypeOracle.cs" />
+    <Compile Include="Models\ConfigurationProviderTypePostgre.cs" />
+    <Compile Include="ModuleData.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\DataService.cs" />
+    <Compile Include="ViewModels\ConfigurationDatabaseViewModel.cs" />
+    <Compile Include="ViewModels\ConfigurationViewModel.cs" />
+    <Compile Include="ViewModels\LoginDataBaseViewModel.cs" />
+    <Compile Include="Views\AddDatabaseDialog.xaml.cs">
+      <DependentUpon>AddDatabaseDialog.xaml</DependentUpon>
     </Compile>
-    <Page Include="MainWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="App.xaml.cs">
-      <DependentUpon>App.xaml</DependentUpon>
-      <SubType>Code</SubType>
+    <Compile Include="Views\LoginDatabaseDialog.xaml.cs">
+      <DependentUpon>LoginDatabaseDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Converters\NullToHiddenConverter.cs" />
-    <Compile Include="Converters\NullToVisibleConverter.cs" />
-    <Compile Include="Extensions\StringExtensions.cs" />
-    <Compile Include="MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
-      <SubType>Code</SubType>
+    <Compile Include="Views\SelectDatabaseDialog.xaml.cs">
+      <DependentUpon>SelectDatabaseDialog.xaml</DependentUpon>
     </Compile>
-    <Page Include="Views\MainView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Models\DbColumn.cs" />
-    <Compile Include="Models\DbKeyForeign.cs" />
-    <Compile Include="Models\DbKeyForeignJoin.cs" />
-    <Compile Include="Models\DbKeyPrimary.cs" />
-    <Compile Include="Models\DbKeyUnique.cs" />
-    <Compile Include="Models\DbSchema.cs" />
-    <Compile Include="Models\DbTable.cs" />
-    <Compile Include="Models\Project.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <None Include="packages.config" />
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-    <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Layers\Shared\Shared.csproj">
+      <Project>{140fc1f4-fe2b-45e2-8fe1-ee28b85a2718}</Project>
+      <Name>Shared</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Page Include="Views\AddDatabaseDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\LoginDatabaseDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\SelectDatabaseDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>mkdir $(SolutionDir)\Applications\Profil\bin\debug\Modules"
+copy "$(ProjectDir)bin\Debug\Modules.Data.dll" "$(SolutionDir)\Applications\Profil\bin\debug\Modules"</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

@@ -1,14 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{96404092-DAD7-4E31-846E-BCBAABF0D025}</ProjectGuid>
+    <ProjectGuid>{AC043A3F-B4D5-4163-B89F-50AA3BEA409C}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>GeoPatGenerator</RootNamespace>
-    <AssemblyName>GeoPatGenerator</AssemblyName>
+    <RootNamespace>Emash.GeoPat.Applications.Profil</RootNamespace>
+    <AssemblyName>Profil</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -58,6 +58,20 @@
     <Reference Include="Microsoft.Practices.Unity.Configuration">
       <HintPath>..\..\packages\Unity.2.1.505.2\lib\NET35\Microsoft.Practices.Unity.Configuration.dll</HintPath>
     </Reference>
+    <Reference Include="Mono.Security">
+      <HintPath>..\..\packages\npgsql\2.1\Mono.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="Npgsql, Version=2.0.12.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\npgsql\2.1\Npgsql.dll</HintPath>
+    </Reference>
+    <Reference Include="Npgsql.EntityFramework">
+      <HintPath>..\..\packages\npgsql\2.1\Npgsql.EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="Oracle.DataAccess, Version=4.112.3.60, Culture=neutral, PublicKeyToken=89b483f429c47342, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\..\OracleODAC\product\11.2.0\client_1\odp.net\bin\4\Oracle.DataAccess.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
@@ -82,48 +96,16 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Bootstrapper.cs" />
-    <Compile Include="IO\CodeDataContextWriter.cs" />
-    <Compile Include="IO\CodeDataEntityWriter.cs" />
-    <Compile Include="IO\PowerAmcMpdReader.cs" />
-    <Compile Include="IO\ProjectReader.cs" />
-    <Compile Include="IO\ProjectWriter.cs" />
-    <Compile Include="IO\SqlPostgreWriter.cs" />
-    <Compile Include="ViewModel\DbSchemaViewModel.cs" />
-    <Compile Include="ViewModel\MainViewModel.cs" />
-    <Compile Include="ViewModel\ProjectViewModel.cs" />
-    <Compile Include="Views\MainView.xaml.cs">
-      <DependentUpon>MainView.xaml</DependentUpon>
-    </Compile>
-    <Page Include="MainWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Converters\NullToHiddenConverter.cs" />
-    <Compile Include="Converters\NullToVisibleConverter.cs" />
-    <Compile Include="Extensions\StringExtensions.cs" />
-    <Compile Include="MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
-      <SubType>Code</SubType>
+    <Compile Include="ViewModels\MainViewModel.cs" />
+    <Compile Include="Views\MainView.xaml.cs">
+      <DependentUpon>MainView.xaml</DependentUpon>
     </Compile>
-    <Page Include="Views\MainView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\DbColumn.cs" />
-    <Compile Include="Models\DbKeyForeign.cs" />
-    <Compile Include="Models\DbKeyForeignJoin.cs" />
-    <Compile Include="Models\DbKeyPrimary.cs" />
-    <Compile Include="Models\DbKeyUnique.cs" />
-    <Compile Include="Models\DbSchema.cs" />
-    <Compile Include="Models\DbTable.cs" />
-    <Compile Include="Models\Project.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -150,6 +132,31 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\..\Layers\Buisness\Buisness.csproj">
+      <Project>{d7bf03f2-a712-4968-a489-3fb6bd8bca69}</Project>
+      <Name>Buisness</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Layers\Data\Data.csproj">
+      <Project>{0536059c-1e7a-43aa-b04e-b8204a16717d}</Project>
+      <Name>Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Layers\Engine\Engine.csproj">
+      <Project>{9b769e20-e438-4f3e-8ddf-641e1a075844}</Project>
+      <Name>Engine</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Layers\Shared\Shared.csproj">
+      <Project>{140fc1f4-fe2b-45e2-8fe1-ee28b85a2718}</Project>
+      <Name>Shared</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Views\MainView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

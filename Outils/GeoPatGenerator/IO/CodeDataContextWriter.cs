@@ -27,7 +27,7 @@ namespace Emash.GeoPat.Generator.IO
             String appPath = System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
             DirectoryInfo directory = new DirectoryInfo(appPath);
             DirectoryInfo directoryCode = directory;
-            while (!directoryCode.Name.Equals("GeoPat"))
+            while (!directoryCode.Name.Equals("GeoPatV2"))
             {directoryCode = directoryCode.Parent; }
             String directoryLayer = Path.Combine(directoryCode.FullName, "Layers");
             String directoryLayerData = Path.Combine(directoryLayer, "Data");
@@ -48,9 +48,9 @@ namespace Emash.GeoPat.Generator.IO
                         this.WriteLine("using System.Data.Entity;");
                         this.WriteLine("using System.Data;");
                         this.WriteLine("using System.Data.Common;");
-                        this.WriteLine("using Emash.GeoPat.Data.Models;");
+                        this.WriteLine("using Emash.GeoPat.Layers.Data.Models;");
                         this.WriteLine("using System.Data.Entity.ModelConfiguration.Conventions;");
-                        this.WriteLine("namespace Emash.GeoPat.Data");
+                        this.WriteLine("namespace Emash.GeoPat.Layers.Data");
                         this.WriteBracketOpen();
 
 
