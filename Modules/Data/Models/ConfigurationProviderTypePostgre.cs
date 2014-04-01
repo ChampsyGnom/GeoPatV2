@@ -39,7 +39,7 @@ namespace Emash.GeoPat.Modules.Data.Models
                     DbConnection connection = Activator.CreateInstance(connectionType) as DbConnection;
                     if (host != null && port != null && database != null)
                     {
-                        connection.ConnectionString = "HOST=" + host + ";PORT=" + port + ";DATABASE=" + database + ";USER ID=" + login.ToLower () + ";PASSWORD=" + password.ToLower () + ";PRELOADREADER=true;";
+                        connection.ConnectionString = "HOST=" + host + ";PORT=" + port + ";DATABASE=" + database + ";USER ID=" + login + ";PASSWORD=" + password + ";PRELOADREADER=true;";
                         return connection;
                     }
 

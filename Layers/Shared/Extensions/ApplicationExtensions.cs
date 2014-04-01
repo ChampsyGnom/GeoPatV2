@@ -15,5 +15,9 @@ namespace System.Windows
             String appStartPath = System.IO.Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName);
             return appStartPath;
         }
+        public static Window GetActiveWindow(this Application currentApp)
+        {
+            return Application.Current.Windows.Cast<Window>().SingleOrDefault(x => x.IsActive);
+        }
     }
 }

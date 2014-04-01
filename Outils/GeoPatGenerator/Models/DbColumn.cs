@@ -34,7 +34,7 @@ namespace Emash.GeoPat.Generator.Models
             else if (this.DataType.StartsWith("INTEGER"))
             { result = "integer"; }
             else if (this.DataType.StartsWith("SMALLINT"))
-            { result = "boolean"; }
+            { result = "integer"; }
             else if (this.DataType.StartsWith("FLOAT"))
             { result = "real"; }
             else if (this.DataType.StartsWith("DATE"))

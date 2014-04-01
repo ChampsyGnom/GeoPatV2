@@ -69,6 +69,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Enums\SplashUserAction.cs" />
+    <Compile Include="Events\ReadyEvent.cs" />
     <Compile Include="Events\SplashEvent.cs" />
     <Compile Include="Extensions\ApplicationExtensions.cs" />
     <Compile Include="Extensions\RegistryExtensions.cs" />

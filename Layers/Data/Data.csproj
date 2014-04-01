@@ -80,6 +80,7 @@
     <Compile Include="DataContextOh.cs" />
     <Compile Include="DataContextPrf.cs" />
     <Compile Include="DataContextWeb.cs" />
+    <Compile Include="ModelBase.cs" />
     <Compile Include="Models\BsnBpu.cs" />
     <Compile Include="Models\BsnCamp.cs" />
     <Compile Include="Models\BsnCdAcces.cs" />

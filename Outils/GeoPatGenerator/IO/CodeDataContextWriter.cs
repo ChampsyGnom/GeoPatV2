@@ -214,7 +214,11 @@ namespace Emash.GeoPat.Generator.IO
                                         propertyName = propertyName.ToCamelCase("_");
                                         if (!column.AllowNull)
                                         {
-                                            this.WriteLine("modelBuilder.Entity<" + className + ">().Property(item => item." + propertyName + ").IsRequired();");
+                                            if (column.DataType.StartsWith("SMALLINT"))
+                                            { this.WriteLine("modelBuilder.Entity<" + className + ">().Property(item => item." + propertyName + "ValueInt).IsRequired();"); }
+                                            else
+                                            { this.WriteLine("modelBuilder.Entity<" + className + ">().Property(item => item." + propertyName + ").IsRequired();"); }
+                                           
                                         }
                                         if (column.Length.HasValue && column.DataType.StartsWith("VARCHAR"))
                                         {
@@ -223,7 +227,15 @@ namespace Emash.GeoPat.Generator.IO
                                         String columnName = column.Name;
                                         if (columnName.StartsWith(table.Name + "__"))
                                         { columnName = columnName.Substring(table.Name.Length + 2); }
-                                        this.WriteLine("modelBuilder.Entity<" + className + ">().Property(item => item." + propertyName + ").HasColumnName(\"" + columnName + "\");");
+                                        if (column.DataType.StartsWith("SMALLINT"))
+                                        { 
+                                            this.WriteLine("modelBuilder.Entity<" + className + ">().Property(item => item." + propertyName + "ValueInt).HasColumnName(\"" + columnName + "\");");
+                                            this.WriteLine("modelBuilder.Entity<" + className + ">().Ignore(item => item." + propertyName + ");");
+                                            //odelBuilder.Entity<Product>().Ignore(p => p.AddressDetails.Country);
+                                        }
+                                        else
+                                        { this.WriteLine("modelBuilder.Entity<" + className + ">().Property(item => item." + propertyName + ").HasColumnName(\"" + columnName + "\");"); }
+                                       
                                     }
                                 }
                             }

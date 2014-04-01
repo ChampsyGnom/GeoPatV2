@@ -38,17 +38,17 @@ namespace Emash.GeoPat.Generator.IO
                      this.Writer = writer;
                      foreach (DbSchema schema in this.Project.Schemas)
                      {
-                         this.WriteLine("DROP SCHEMA "+schema.Name+" CASCADE;");
-                         this.WriteLine("DROP ROLE " + schema.Name + "_ADMIN;");                     
-                         this.WriteLine("DROP ROLE " + schema.Name + "_CONSULT;");
+                         this.WriteLine("DROP SCHEMA \"" + schema.Name + "\" CASCADE;");
+                         this.WriteLine("DROP ROLE  \"" + schema.Name + "_ADMIN\";");
+                         this.WriteLine("DROP ROLE  \"" + schema.Name + "_CONSULT\";");
                      }
                      this.WriteLine("");
                      foreach (DbSchema schema in this.Project.Schemas)
                      {
-                         this.WriteLine("CREATE USER " + schema.Name + "_ADMIN WITH PASSWORD '" + schema.Name + "_ADMIN';");
-                         this.WriteLine("CREATE USER " + schema.Name + "_CONSULT WITH PASSWORD '" + schema.Name + "_CONSULT';");                       
-                         this.WriteLine("CREATE SCHEMA " + schema .Name+ " AUTHORIZATION postgres;");
-                         this.WriteLine("COMMENT ON SCHEMA " + schema.Name + " IS '"+schema.DisplayName .Replace ("'","''")+"';");
+                         this.WriteLine("CREATE USER  \"" + schema.Name + "_ADMIN\" WITH PASSWORD '" + schema.Name + "_ADMIN';");
+                         this.WriteLine("CREATE USER  \"" + schema.Name + "_CONSULT\" WITH PASSWORD '" + schema.Name + "_CONSULT';");
+                         this.WriteLine("CREATE SCHEMA  \"" + schema.Name + "\" AUTHORIZATION postgres;");
+                         this.WriteLine("COMMENT ON SCHEMA  \"" + schema.Name + "\" IS '" + schema.DisplayName.Replace("'", "''") + "';");
                      }
                      this.WriteLine("");
 
@@ -57,27 +57,27 @@ namespace Emash.GeoPat.Generator.IO
                          this.WriteLine("");
                          foreach (DbTable table in schema.Tables)
                          {
-                            
-                             this.WriteLine("CREATE TABLE "+schema.Name+"."+table.Name+"");
+
+                             this.WriteLine("CREATE TABLE  \"" + schema.Name + "\". \"" + table.Name + "\"");
                              this.WriteLine("(");
                              List<String> columnDefinitions = new List<string> ();
                              foreach (DbColumn column in table.Columns)
                              {
                                  if (column.Name.StartsWith(table.Name+"__"))
-                                 { columnDefinitions.Add(column.Name.Substring(table.Name.Length+2) + " " + column.ToPostgreSqlDefinition()); }
+                                 { columnDefinitions.Add("\"" + column.Name.Substring(table.Name.Length + 2) + "\"" + " " + column.ToPostgreSqlDefinition()); }
                                  else
-                                 { columnDefinitions.Add(column.Name + " " + column.ToPostgreSqlDefinition()); }
+                                 { columnDefinitions.Add("\"" +column.Name + "\"" + column.ToPostgreSqlDefinition()); }
                              }
                              //= (from c in table.Columns select c.Name+" "+ c.ToPostgreSqlDefinition()).ToList();
                              this.WriteLine(String.Join (",\r\n",columnDefinitions));
                              this.WriteLine(");");
-                             this.WriteLine("COMMENT ON TABLE " + schema.Name + "." + table.Name + " IS '"+table.DisplayName .Replace ("'","''")+"';");
+                             this.WriteLine("COMMENT ON TABLE \"" + schema.Name + "\".\"" + table.Name + "\" IS '"+table.DisplayName .Replace ("'","''")+"';");
                              foreach (DbColumn column in table.Columns)
                              {
                                  String columnName = column.Name;
                                  if (columnName.StartsWith(table.Name + "__"))
                                  { columnName = columnName.Substring(table.Name.Length + 2); }
-                                 this.WriteLine("COMMENT ON COLUMN " + schema.Name + "." + table.Name + "." + columnName + " IS '" + column.DisplayName.Replace("'", "''") + "';");
+                                 this.WriteLine("COMMENT ON COLUMN \"" + schema.Name + "\".\"" + table.Name + "\".\"" + columnName + "\" IS '" + column.DisplayName.Replace("'", "''") + "';");
                              }
                              this.WriteLine("");
                              
@@ -93,11 +93,11 @@ namespace Emash.GeoPat.Generator.IO
                              foreach (DbColumn column in columns)
                              {
                                  if (column.Name.StartsWith(table.Name + "__"))
-                                 { columnNames.Add(column.Name.Substring(table.Name.Length + 2)); }
+                                 { columnNames.Add("\""+column.Name.Substring(table.Name.Length + 2)+"\""); }
                                  else
-                                 { columnNames.Add(column.Name); }
+                                 { columnNames.Add("\""+column.Name+"\""); }
                              }
-                             this.WriteLine("ALTER TABLE "+schema.Name+"."+table.Name+"  ADD CONSTRAINT "+table.Name+"_PK PRIMARY KEY ("+String.Join (",",columnNames )+");");
+                             this.WriteLine("ALTER TABLE \""+schema.Name+"\".\""+table.Name+"\"  ADD CONSTRAINT \""+table.Name+"_PK\" PRIMARY KEY ("+String.Join (",",columnNames )+");");
                              //
                          }
                          foreach (DbKeyForeign  fk in schema.ForeignKeys)
@@ -120,14 +120,14 @@ namespace Emash.GeoPat.Generator.IO
                                  if (columnNameChild.StartsWith(tableChild.Name + "__"))
                                  {columnNameChild = columnNameChild.Substring(tableChild.Name.Length + 2); }
                                
-                                 columnNamesChild.Add (columnNameChild);
-                                 columnNamesParent.Add (columnNameParent);
+                                 columnNamesChild.Add ("\""+columnNameChild+"\"");
+                                 columnNamesParent.Add ("\""+columnNameParent+"\"");
                              }
-                             this.WriteLine("ALTER TABLE " + schema.Name + "." + tableChild.Name + " ADD CONSTRAINT " + tableChild.Name + "__"+tableParent.Name+"_FK FOREIGN KEY ("+String.Join (",",columnNamesChild)+") ");
+                             this.WriteLine("ALTER TABLE \"" + schema.Name + "\".\"" + tableChild.Name + "\" ADD CONSTRAINT \"" + tableChild.Name + "__"+tableParent.Name+"_FK\" FOREIGN KEY ("+String.Join (",",columnNamesChild)+") ");
                              if (fk.DeleteOnCascade)
-                             { this.WriteLine(" REFERENCES " + schema.Name + "." + tableParent.Name + " (" + String.Join(",", columnNamesParent) + ") MATCH SIMPLE ON UPDATE CASCADE ON DELETE CASCADE;"); }
+                             { this.WriteLine(" REFERENCES \"" + schema.Name + "\".\"" + tableParent.Name + "\" (" + String.Join(",", columnNamesParent) + ") MATCH SIMPLE ON UPDATE CASCADE ON DELETE CASCADE;"); }
                              else
-                             { this.WriteLine(" REFERENCES " + schema.Name + "." + tableParent.Name + " (" + String.Join(",", columnNamesParent) + ") MATCH SIMPLE;"); }
+                             { this.WriteLine(" REFERENCES \"" + schema.Name + "\".\"" + tableParent.Name + "\" (" + String.Join(",", columnNamesParent) + ") MATCH SIMPLE;"); }
                          
                              //ALTER TABLE INF.INF_ACCIDENT ADD CONSTRAINT INF_CHAUSSEE__INF_ACCIDENT FOREIGN KEY (INF_CHAUSSEE__ID) 
 //REFERENCES INF.INF_CHAUSSEE (INF_CHAUSSEE__ID) MATCH SIMPLE ON UPDATE CASCADE ON DELETE CASCADE;
@@ -135,12 +135,14 @@ namespace Emash.GeoPat.Generator.IO
                      }
                      foreach (DbSchema schema in this.Project.Schemas)
                      {
-                         this.WriteLine("");
+                         this.WriteLine("GRANT USAGE ON SCHEMA \"" + schema.Name + "\" TO \"" + schema.Name + "_ADMIN\";");
+                         this.WriteLine("GRANT USAGE ON SCHEMA \"" + schema.Name + "\" TO \"" + schema.Name + "_CONSULT\";");
+                         
                          foreach (DbTable table in schema.Tables)
                          {
-                             this.WriteLine("GRANT INSERT,DELETE,UPDATE ON " + schema .Name+ "."+table.Name+" TO "+schema.Name+"_ADMIN;");
-                             this.WriteLine("GRANT SELECT ON " + schema.Name + "." + table.Name + " TO " + schema.Name + "_CONSULT;");
-                             this.WriteLine("GRANT " + schema.Name + "_CONSULT TO " + schema.Name + "_ADMIN;");
+                             this.WriteLine("GRANT INSERT,DELETE,UPDATE ON \"" + schema .Name+ "\".\""+table.Name+"\" TO \""+schema.Name+"_ADMIN\";");
+                             this.WriteLine("GRANT SELECT ON \"" + schema.Name + "\".\"" + table.Name + "\" TO \"" + schema.Name + "_CONSULT\";");
+                             this.WriteLine("GRANT \"" + schema.Name + "_CONSULT\" TO \"" + schema.Name + "_ADMIN\";");
                          }
                      }
                  }

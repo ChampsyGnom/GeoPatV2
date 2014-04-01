@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>Npgsql.EntityFrameworkLegacy</id>
+    <version>2.1.2</version>
+    <title>Npgsql for Entity Framework Legacy</title>
+    <authors>Francisco Figueiredo Jr.,  Josh Cooley,  Dave Page,  Jon Asher,  Brar Piening,  Chris Morgan,  Hiroshi Saito,  Jon Hanna,  Federico Di Gregorio,  Glen Parker,  Shay Rojansky</authors>
+    <owners>Francisco Figueiredo Jr.,  Josh Cooley,  Dave Page,  Jon Asher,  Brar Piening,  Chris Morgan,  Hiroshi Saito,  Jon Hanna,  Federico Di Gregorio,  Glen Parker,  Shay Rojansky</owners>
+    <licenseUrl>https://github.com/npgsql/Npgsql/wiki/License</licenseUrl>
+    <projectUrl>https://github.com/npgsql/Npgsql</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Postgresql provider for Entity Framework 5 and below</description>
+    <summary>Postgresql provider for Entity Framework 5 and below</summary>
+    <releaseNotes>This version contains fixes for #165 (KeyNotFoundException when setting ApplicationName on NpgsqlConnectionStringBuilder) and a regression when using NHibernate with queries containing '&lt;' operator. #193 (Less Than' prepare failing).
+
+Note that version breaks support to @@ operator added by #135 . Glen Parker is working in a full solution which adds #135 support back. If you need #135 support, please, use the 2.1.1 version. Sorry for this problem.</releaseNotes>
+    <copyright>Copyright 2002 - 2014 Npgsql Development Team</copyright>
+    <language>en-US</language>
+    <tags>Npgsql postgres data database Postgresql entity framework ef</tags>
+    <dependencies>
+      <dependency id="Npgsql" version="[2.1.2]" />
+      <dependency id="EntityFramework" version="(, 6.0.0)" />
+    </dependencies>
+  </metadata>
+</package>

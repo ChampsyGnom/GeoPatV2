@@ -23,32 +23,13 @@ namespace Emash.GeoPat.Applications.Profil
     /// </summary>
     public partial class App : Application
     {
-        public static DataContextPrf DataContextPrf { get; private set; }
-        public static DataContextInf DataContextInf { get; private set; }
+       
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
             Bootstrapper<MainViewModel, MainView> bootstrapper = new Bootstrapper<MainViewModel, MainView>();
             bootstrapper.Run();
-            if (ServiceLocator.Current.GetInstance<IDataService>().Connection != null)
-            {
-                ServiceLocator.Current.GetInstance<IEventAggregator>().GetEvent<SplashEvent>().Publish("Initialisation de la base de donnée ...");
-
-                Database.SetInitializer<DataContextPrf>(null);
-                Database.SetInitializer<DataContextInf>(null);
-
-                ServiceLocator.Current.GetInstance<IEventAggregator>().GetEvent<SplashEvent>().Publish("Initialisation du schéma PRF ...");
-                App.DataContextPrf = new Layers.Data.DataContextPrf(ServiceLocator.Current.GetInstance<IDataService>().Connection);
-                App.DataContextPrf.Database.Initialize(false);
-
-                ServiceLocator.Current.GetInstance<IEventAggregator>().GetEvent<SplashEvent>().Publish("Initialisation du schéma INF ...");
-                App.DataContextInf = new Layers.Data.DataContextInf(ServiceLocator.Current.GetInstance<IDataService>().Connection);
-                App.DataContextInf.Database.Initialize(false);
-
-                ServiceLocator.Current.GetInstance<ISplashService>().CloseSplash();
-                ServiceLocator.Current.GetInstance<IMainView>().Show();
-            }
-            
+           
         }
     }
 }

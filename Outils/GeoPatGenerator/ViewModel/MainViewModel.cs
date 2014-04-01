@@ -34,9 +34,7 @@ namespace Emash.GeoPat.Generator.ViewModel
         {
             PropertyChangedEventHandler handler = PropertyChanged;
             if (handler != null)
-            {
-                handler(this, new PropertyChangedEventArgs(name));
-            }
+            {handler(this, new PropertyChangedEventArgs(name));}
         }
 
         private void RaiseChanges()

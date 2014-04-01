@@ -2,10 +2,13 @@
 using Emash.GeoPat.Layers.Engine.ViewModels;
 using Emash.GeoPat.Layers.Engine.Views;
 using Emash.GeoPat.Layers.Shared.Enums;
+using Emash.GeoPat.Layers.Shared.Events;
 using Emash.GeoPat.Layers.Shared.Models;
 using Emash.GeoPat.Layers.Shared.Services;
+using Microsoft.Practices.Prism.Events;
 using Microsoft.Practices.Prism.Modularity;
 using Microsoft.Practices.Prism.UnityExtensions;
+using Microsoft.Practices.ServiceLocation;
 using Microsoft.Practices.Unity;
 using System;
 using System.Collections.Generic;
@@ -126,7 +129,9 @@ namespace Emash.GeoPat.Layers.Engine
                     this.Container.Resolve<IDataService>().SetPasswordForLogin(defaultDatabase,login, password);
                     this.Container.Resolve<IDataService>().SetDefaultDatabase(defaultDatabase);
                     this.Container.Resolve<IDataService>().CreateConnection(defaultDatabase,login, password);
-
+                    ServiceLocator.Current.GetInstance<IEventAggregator>().GetEvent<ReadyEvent>().Publish(true);
+                    ServiceLocator.Current.GetInstance<ISplashService>().CloseSplash();
+                    ServiceLocator.Current.GetInstance<IMainView>().Show();
                 }
             }
             

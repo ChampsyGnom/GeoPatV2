@@ -32,6 +32,7 @@
                 <Button Command="{Binding Path=CurrentProject.AddDbSchemaCommand}" Content="Ajouter un MPD"></Button>
                 <Separator></Separator>
                 <Button Command="{Binding Path=CurrentProject.GenerateCodeDataCommand}" Content="Génerer C# Data"></Button>
+                <Button Command="{Binding Path=CurrentProject.GenerateCodeBuisnessCommand}" Content="Génerer C# Buisness"></Button>
                 <Button Command="{Binding Path=CurrentProject.GenerateSqlPostgreCommand}" Content="Génerer SQL Postgre"></Button>
             </ToolBar>
             <TabControl Grid.Row="1" ItemsSource="{Binding Path=CurrentProject.Schemas}">

@@ -1,4 +1,5 @@
-﻿using Emash.GeoPat.Layers.Engine.Views;
+﻿using Emash.GeoPat.Layers.Engine.ViewModels;
+using Emash.GeoPat.Layers.Engine.Views;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,8 +21,9 @@ namespace Emash.GeoPat.Applications.Profil.Views
     /// </summary>
     public partial class MainView : Window,IMainView
     {
-        public MainView()
+        public MainView(IMainViewModel viewModel)
         {
+            this.DataContext = viewModel;
             InitializeComponent();
         }
     }

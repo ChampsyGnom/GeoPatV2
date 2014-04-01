@@ -55,7 +55,7 @@ namespace Emash.GeoPat.Generator.IO
 
                    
                     this.WriteLine("[Table(\""+this.Table.Name+"\",Schema=\""+this.Schema.Name+"\")]");
-                    this.WriteLine("public partial class " + className);
+                    this.WriteLine("public partial class " + className + " : ModelBase");
                     this.WriteBracketOpen();
 
                     int columnOrder = 0;
@@ -88,8 +88,7 @@ namespace Emash.GeoPat.Generator.IO
                         { columnName = columnName.Substring(Table.Name.Length + 1); }
                         if (columnName.StartsWith("_"))
                         {columnName = columnName.Substring(1);}
-                        String propertyName = columnName;
-                   
+                        String propertyName = columnName;                   
                         propertyName = propertyName.ToCamelCase("_");
                         if (column.DataType.StartsWith("VARCHAR2"))
                         {
@@ -148,18 +147,18 @@ namespace Emash.GeoPat.Generator.IO
                             {
                                 
                                 this.WriteLine("[Required()]");
-                                this.WriteLine("public int " + propertyName + " { get; set; }");
+                                this.WriteLine("public int " + propertyName + "ValueInt { get; set; }");
                                 this.WriteLine("[NotMapped]");
-                                this.WriteLine("public Boolean " + propertyName + "Bool ");
+                                this.WriteLine("public Boolean " + propertyName + " ");
                                 this.WriteBracketOpen ();
                                 this.WriteLine ("get");
                                 this.WriteBracketOpen ();
-                                this.WriteLine ("return Convert.ToBoolean(" + propertyName + ");");
+                                this.WriteLine("return Convert.ToBoolean(" + propertyName + "ValueInt);");
                                 this.WriteBracketClose ();
 
                                 this.WriteLine ("set");
                                 this.WriteBracketOpen ();
-                                this.WriteLine("this." + propertyName  +" = Convert.ToInt32(value);");
+                                this.WriteLine("this." + propertyName + "ValueInt = Convert.ToInt32(value);");
                                 this.WriteBracketClose ();
 
                                 this.WriteBracketClose ();
@@ -169,7 +168,23 @@ namespace Emash.GeoPat.Generator.IO
                             }
                             else
                             {
-                                this.WriteLine("public Nullable<int> " + propertyName + " { get; set; }");
+                        
+                                this.WriteLine("public Nullable<int> " + propertyName + "ValueInt { get; set; }");
+                                this.WriteLine("[NotMapped]");
+                                this.WriteLine("public Nullable<Boolean> " + propertyName + " ");
+                                this.WriteBracketOpen();
+                                this.WriteLine("get");
+                                this.WriteBracketOpen();
+                                this.WriteLine("if (" + propertyName + "ValueInt.HasValue) return Convert.ToBoolean(" + propertyName + "ValueInt.Value);");
+                                this.WriteLine("else return null;");
+                                this.WriteBracketClose();
+                                this.WriteLine("set");
+                                this.WriteBracketOpen();
+                                this.WriteLine("if (value.HasValue) {this." + propertyName + "ValueInt = Convert.ToInt32(value.Value);}");
+                                this.WriteLine("else {this." + propertyName + "ValueInt =null;}");
+                                this.WriteBracketClose();
+
+                                this.WriteBracketClose();
                             }
 
                             this.WriteLine("");

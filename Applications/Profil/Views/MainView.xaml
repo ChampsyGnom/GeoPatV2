@@ -1,9 +1,85 @@
 ﻿<Window x:Class="Emash.GeoPat.Applications.Profil.Views.MainView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ap="clr-namespace:Emash.GeoPat.Layers.Engine.AttachedProperties;assembly=Layers.Engine"
         WindowStartupLocation="CenterScreen"
+        xmlns:vm="clr-namespace:Emash.GeoPat.Applications.Profil.ViewModels"
         Title="Gestion des profils" Height="600" Width="800">
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <TabControl Grid.Row="1">
+            <TabItem Header="Utilisateurs">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="300"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <GroupBox Grid.Column="0" Header="Liste des utilisateurs">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"></RowDefinition>
+                                <RowDefinition Height="Auto"></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <DataGrid IsSynchronizedWithCurrentItem="True" IsReadOnly="True" ap:DataGridConfig.UseDisplayNameForHeader="True"  ItemsSource="{Binding Path=Users,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"></DataGrid>
+                            <Grid Grid.Row="1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"></ColumnDefinition>
+                                    <ColumnDefinition Width="*"></ColumnDefinition>
+                                    <ColumnDefinition Width="*"></ColumnDefinition>                                    
+                                </Grid.ColumnDefinitions>
+                                <Button Command="{Binding Path=AddUserCommand}" Grid.Column="0" Content="Ajouter" Height="32" Margin="2"></Button>
+                                <Button Command="{Binding Path=EditUserCommand}"  Grid.Column="1" Content="Modifer" Height="32" Margin="2"></Button>
+                                <Button Command="{Binding Path=DeleteUserCommand}"  Grid.Column="2" Content="Supprimer" Height="32" Margin="2"></Button>
+                            </Grid>
+                        </Grid>
+                     
+                    </GroupBox>
+                    <GroupBox Grid.Column="1" Header="Détail utilisateur">
+                        <ContentControl Content="{Binding Path=Users.CurrentItem,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}">
+                            <ContentControl.Resources>
+                                <DataTemplate DataType="{x:Type vm:UserViewModel}">
+                                    <Grid DataContext="{Binding Path=Users.CurrentItem,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                            <ColumnDefinition Width="*"></ColumnDefinition>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"></RowDefinition>
+                                            <RowDefinition Height="Auto"></RowDefinition>
+                                            <RowDefinition Height="Auto"></RowDefinition>
+                                            <RowDefinition Height="Auto"></RowDefinition>
+                                            <RowDefinition Height="Auto"></RowDefinition>
+                                            <RowDefinition Height="Auto"></RowDefinition>
+                                            <RowDefinition Height="*"></RowDefinition>
+                                        </Grid.RowDefinitions>
+                                        <TextBlock Text="Login : " Margin="2" Grid.Column="0" Grid.Row="0"></TextBlock>
+                                        <TextBlock Text="Nom : " Margin="2" Grid.Column="0" Grid.Row="1"></TextBlock>
+                                        <TextBlock Text="Prénom : " Margin="2" Grid.Column="0" Grid.Row="2"></TextBlock>
+                                        <TextBlock Text="Mot de passe : " Margin="2" Grid.Column="0" Grid.Row="3"></TextBlock>
+                                        <TextBlock Text="Famille de découpage : " Margin="2" Grid.Column="0" Grid.Row="4"></TextBlock>
+                                        <TextBlock Text="Code de découpage : " Margin="2" Grid.Column="0" Grid.Row="5"></TextBlock>
+
+
+                                        <TextBox IsReadOnly="True" Text="{Binding Path=Login,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}" Margin="2" Grid.Column="1" Grid.Row="0"></TextBox>
+                                        <TextBox IsReadOnly="True"  Text="{Binding Path=Nom,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}" Margin="2" Grid.Column="2" Grid.Row="1"></TextBox>
+                                        <TextBox IsReadOnly="True"  Text="{Binding Path=Prenom,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}" Margin="2" Grid.Column="3" Grid.Row="2"></TextBox>
+                                        <TextBox IsReadOnly="True"  Text="{Binding Path=Passwords,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}" Margin="2" Grid.Column="4" Grid.Row="3"></TextBox>
+                                        <TextBox IsReadOnly="True"  Text="{Binding Path=FamDecInf,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}" Margin="2" Grid.Column="5" Grid.Row="4"></TextBox>
+                                        <TextBox IsReadOnly="True"  Text="{Binding Path=CdDecInf,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}" Margin="2" Grid.Column="6" Grid.Row="5"></TextBox>
+
+                                        <GroupBox Header="Profils de l'utilisateur" Grid.Row="6" Grid.ColumnSpan="2"></GroupBox>
+                                    </Grid>
+                                </DataTemplate>
+                            </ContentControl.Resources>
+                        </ContentControl>
+                        
+                    </GroupBox>
+                </Grid>
+               
+            </TabItem>
+        </TabControl>
     </Grid>
 </Window>

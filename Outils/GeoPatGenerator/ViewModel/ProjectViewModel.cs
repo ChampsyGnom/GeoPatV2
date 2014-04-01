@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Collections.ObjectModel;
+using GeoPatGenerator.IO;
 namespace Emash.GeoPat.Generator.ViewModel
 {
     public class ProjectViewModel
@@ -15,6 +16,7 @@ namespace Emash.GeoPat.Generator.ViewModel
         public DelegateCommand AddDbSchemaCommand { get; private set; }
         public DelegateCommand GenerateCodeDataCommand { get; private set; }
         public DelegateCommand GenerateSqlPostgreCommand { get; private set; }
+        public DelegateCommand GenerateCodeBuisnessCommand { get; private set; }
         public Project Model { get; private set; }
         public ObservableCollection<DbSchemaViewModel> Schemas { get; private set; }
         public ProjectViewModel(Project model)
@@ -23,9 +25,21 @@ namespace Emash.GeoPat.Generator.ViewModel
             this.AddDbSchemaCommand = new DelegateCommand(AddDbSchemaCommandExecute);
             this.GenerateCodeDataCommand = new DelegateCommand(GenerateCodeDataCommandExecute);
             this.GenerateSqlPostgreCommand = new DelegateCommand(GenerateSqlPostgreCommandExecute);
+            this.GenerateCodeBuisnessCommand = new DelegateCommand(GenerateCodeBuisnessCommandExecute);
             this.Schemas = new ObservableCollection<DbSchemaViewModel>();
             foreach (DbSchema schema in model.Schemas)
             {this.Schemas.Add(new DbSchemaViewModel(schema));}
+        }
+        private void GenerateCodeBuisnessCommandExecute()
+        {
+            foreach (DbSchema schema in this.Model.Schemas)
+            {
+                foreach (DbTable table in schema.Tables)
+                {
+                    CodeBuisnessEntityWriter writer = new CodeBuisnessEntityWriter(this.Model, schema, table);
+                    writer.Write();
+                }
+            }
         }
         private void GenerateSqlPostgreCommandExecute()
         {
