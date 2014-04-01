@@ -11,7 +11,7 @@ namespace Emash.GeoPat.Layers.Buisness
 {
     public class ViewModelCollection<M,VM> : ObservableCollection<VM> 
     where  M : ModelBase
-    where VM : ViewModelBase 
+    where VM : ViewModelBase<M>
     {
         public DbContext DbContext { get;  set; }
         private DbSet<M> DbSet { get;  set; }

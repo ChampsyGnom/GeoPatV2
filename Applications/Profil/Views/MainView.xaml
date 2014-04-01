@@ -23,7 +23,14 @@
                                 <RowDefinition Height="*"></RowDefinition>
                                 <RowDefinition Height="Auto"></RowDefinition>
                             </Grid.RowDefinitions>
-                            <DataGrid IsSynchronizedWithCurrentItem="True" IsReadOnly="True" ap:DataGridConfig.UseDisplayNameForHeader="True"  ItemsSource="{Binding Path=Users,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"></DataGrid>
+                            <DataGrid IsSynchronizedWithCurrentItem="True" IsReadOnly="True" AutoGenerateColumns="False" ItemsSource="{Binding Path=Users,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}">
+                                <DataGrid.Columns>                                    
+                                    <DataGridTextColumn Width="*" Header="Nom" Binding="{Binding Path=Login,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"></DataGridTextColumn>
+                                    <DataGridTextColumn Width="*" Header="Prenom" Binding="{Binding Path=Login,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"></DataGridTextColumn>
+                                    <DataGridTextColumn Width="*" Header="Famille de découpage" Binding="{Binding Path=Login,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"></DataGridTextColumn>
+                                    <DataGridTextColumn Width="*" Header="Code découpage" Binding="{Binding Path=Login,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"></DataGridTextColumn>
+                                </DataGrid.Columns>
+                            </DataGrid>
                             <Grid Grid.Row="1">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*"></ColumnDefinition>
@@ -41,7 +48,7 @@
                         <ContentControl Content="{Binding Path=Users.CurrentItem,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}">
                             <ContentControl.Resources>
                                 <DataTemplate DataType="{x:Type vm:UserViewModel}">
-                                    <Grid DataContext="{Binding Path=Users.CurrentItem,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}">
+                                    <Grid >
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="Auto"></ColumnDefinition>
                                             <ColumnDefinition Width="*"></ColumnDefinition>

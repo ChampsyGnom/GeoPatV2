@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Emash.GeoPat.Layers.Buisness
 {
-    public abstract class ViewModelBase : INotifyPropertyChanged
+    public abstract class ViewModelBase<M> : INotifyPropertyChanged
     {
         public abstract void Read();
         public abstract void Write();
@@ -19,5 +19,14 @@ namespace Emash.GeoPat.Layers.Buisness
             { handler(this, new PropertyChangedEventArgs(name)); }
 
         }
+
+        [Browsable(false)]
+        public M Model { get; set; }
+        public ViewModelBase(M model)
+        {           
+            this.Model = model;
+            this.Read();
+        }
+
     }
 }

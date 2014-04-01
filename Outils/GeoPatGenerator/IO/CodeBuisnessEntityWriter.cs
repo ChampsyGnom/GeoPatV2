@@ -64,13 +64,13 @@ namespace GeoPatGenerator.IO
                     this.WriteLine("using Emash.GeoPat.Layers.Data.Models;");
                     this.WriteLine("namespace Emash.GeoPat.Layers.Buisness.ViewModels");
                     this.WriteBracketOpen();
-                    this.WriteLine("public partial class " + className + " : ViewModelBase");
+                    this.WriteLine("public partial class " + className + " : ViewModelBase<" + modelClassName + ">");
                     this.WriteBracketOpen();
 
                    
 
-                    this.WriteLine("public " + modelClassName + " Model {get; set;}");
-                    this.WriteLine("public " + className + "(" + modelClassName + " model)");
+                    
+                    this.WriteLine("public " + className + "(" + modelClassName + " model) : base(model)");
                     this.WriteBracketOpen();
                     foreach (DbKeyForeign fkParent in fkParents)
                     {
@@ -82,8 +82,7 @@ namespace GeoPatGenerator.IO
                         this.WriteLine("");
                     }
 
-                    this.WriteLine("this.Model = model;");
-                    this.WriteLine("this.Read();");
+                   
                     this.WriteBracketClose();
 
                     this.WriteLine("public override void Read()");
@@ -185,6 +184,7 @@ namespace GeoPatGenerator.IO
                         this.WriteLine("public virtual ObservableCollection<" + childClassName + "ViewModel> " + childClassName + "s { get; set; }");
                         this.WriteLine("");
                     }
+
 
                     foreach (DbColumn column in Table.Columns)
                     {

@@ -40,6 +40,13 @@ namespace Emash.GeoPat.Applications.Profil.ViewModels
             this.AddUserCommand = new DelegateCommand(AddUser);
             this.EditUserCommand = new DelegateCommand(EditCurrentUser, CanEditOrDeleteCurrentUser);
             this.DeleteUserCommand = new DelegateCommand(DeleteCurrentUser, CanEditOrDeleteCurrentUser);
+            this.Users.CurrentChanged += Users_CurrentChanged;
+        }
+
+        void Users_CurrentChanged(object sender, EventArgs e)
+        {
+            this.EditUserCommand.RaiseCanExecuteChanged();
+            this.DeleteUserCommand.RaiseCanExecuteChanged();
         }
 
         private void AddUser()
@@ -50,21 +57,42 @@ namespace Emash.GeoPat.Applications.Profil.ViewModels
             view.Owner = Application.Current.GetActiveWindow();
             Nullable<Boolean> result = view.ShowDialog();
             if (result.HasValue && result.Value == true)
-            { 
-                this.DataContextPrf.Set<PrfBmUser>().Add (vm.)
+            {
+                vm.Write();
+                this.DataContextPrf.Set<PrfBmUser>().Add(vm.Model);
+                this.DataContextPrf.SaveChanges();
+                this._users.Add(vm);
             }
         }
 
         private void EditCurrentUser()
         {
             if (this.Users.CurrentItem != null)
-            { }
+            {
+                UserView view = new UserView();
+                UserViewModel vm = this.Users.CurrentItem as UserViewModel;
+                view.DataContext = vm;
+                view.Owner = Application.Current.GetActiveWindow();
+                Nullable<Boolean> result = view.ShowDialog();
+                if (result.HasValue && result.Value == true)
+                {
+                    vm.Write();
+                    this.DataContextPrf.SaveChanges();
+                }
+                else
+                {vm.Read();}
+            }
         }
 
         private void DeleteCurrentUser()
         {
             if (this.Users.CurrentItem != null)
-            { }
+            {
+                UserViewModel vm = this.Users.CurrentItem as UserViewModel;
+                this.DataContextPrf.Set<PrfBmUser>().Remove(vm.Model);
+                this.DataContextPrf.SaveChanges();
+                this._users.Remove(vm);
+            }
         }
 
         private Boolean CanEditOrDeleteCurrentUser()

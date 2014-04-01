@@ -61,8 +61,10 @@ namespace Emash.GeoPat.Generator.IO
                              this.WriteLine("CREATE TABLE  \"" + schema.Name + "\". \"" + table.Name + "\"");
                              this.WriteLine("(");
                              List<String> columnDefinitions = new List<string> ();
+                             columnDefinitions.Add("\"ID_PK\" SERIAL");
                              foreach (DbColumn column in table.Columns)
                              {
+                                 
                                  if (column.Name.StartsWith(table.Name+"__"))
                                  { columnDefinitions.Add("\"" + column.Name.Substring(table.Name.Length + 2) + "\"" + " " + column.ToPostgreSqlDefinition()); }
                                  else
@@ -85,6 +87,10 @@ namespace Emash.GeoPat.Generator.IO
                      }
                      foreach (DbSchema schema in this.Project.Schemas)
                      {
+                         foreach (DbTable table in schema.Tables)
+                         {
+                             this.WriteLine("ALTER TABLE \"" + schema.Name + "\".\"" + table.Name + "\"  ADD CONSTRAINT \"" + table.Name + "_PK\" PRIMARY KEY   (\"ID_PK\");");
+                         }
                          foreach (DbKeyPrimary pk in schema.PrimaryKeys)
                          {
                              DbTable table = (from t in schema.Tables where t.Id.Equals (pk.TableId ) select t).FirstOrDefault();
@@ -97,7 +103,7 @@ namespace Emash.GeoPat.Generator.IO
                                  else
                                  { columnNames.Add("\""+column.Name+"\""); }
                              }
-                             this.WriteLine("ALTER TABLE \""+schema.Name+"\".\""+table.Name+"\"  ADD CONSTRAINT \""+table.Name+"_PK\" PRIMARY KEY ("+String.Join (",",columnNames )+");");
+                             this.WriteLine("ALTER TABLE \"" + schema.Name + "\".\"" + table.Name + "\"  ADD CONSTRAINT \"" + table.Name + "_UK"+pk.Id+"\" UNIQUE   (" + String.Join(",", columnNames) + ");");
                              //
                          }
                          foreach (DbKeyForeign  fk in schema.ForeignKeys)

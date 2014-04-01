@@ -205,7 +205,7 @@ namespace Emash.GeoPat.Generator.IO
 
                                     }
                                     this.WriteLine("modelBuilder.Entity<" + className + ">().ToTable(\"" + table.Name + "\",\"" + schema.Name + "\");");
-                                    this.WriteLine("modelBuilder.Entity<" + className + ">().HasKey(item => new {" + String.Join(",", (from s in keyStrings select "item." + s)) + " });");
+                                  //  this.WriteLine("modelBuilder.Entity<" + className + ">().HasKey(item => new {" + String.Join(",", (from s in keyStrings select "item." + s)) + " });");
                                     foreach (DbColumn column in table.Columns)
                                     {
                                         String propertyName = column.Name;

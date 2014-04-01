@@ -81,8 +81,14 @@ namespace Emash.GeoPat.Generator.IO
                        this.WriteLine("public virtual ICollection<" + childClassName + "> " + childClassName + "s { get; set; }");
                        this.WriteLine("");
                     }
+
+                    this.WriteLine("[Key]");
+                    this.WriteLine("[Column(\"ID_PK\",Order=0)]");
+                    this.WriteLine("[Required()]");
+                    this.WriteLine("public Int64 IdPk { get; set; }");
                     foreach (DbColumn column in Table.Columns)
                     {
+                        
                         String columnName = column.Name;
                         if (columnName.StartsWith(Table.Name + "_"))
                         { columnName = columnName.Substring(Table.Name.Length + 1); }
@@ -97,8 +103,8 @@ namespace Emash.GeoPat.Generator.IO
                                 if (uk.ColumnIds.Contains(column.Id))
                                 { this.WriteLine("[Index(\"UQ_" + uk.Name + "\"," + uk.ColumnIds.IndexOf(column.Id) + " , IsUnique = true)]"); }
                             }
-                            if (pk != null && pk.ColumnIds.Contains(column.Id))
-                            {this.WriteLine("[Key]");}
+                           // if (pk != null && pk.ColumnIds.Contains(column.Id))
+                          //  {this.WriteLine("[Key]");}
                             this.WriteLine("[Description(\"" + column.DisplayName.Replace ("\"","\\\"") + "\")]");
                             this.WriteLine("[Column(\"" + columnName + "\",Order=" + columnOrder + ")]");
                             if (!column.AllowNull)
@@ -116,8 +122,8 @@ namespace Emash.GeoPat.Generator.IO
                                 if (uk.ColumnIds.Contains(column.Id))
                                 { this.WriteLine("[Index(\"UQ_" + uk.Name + "\"," + uk.ColumnIds.IndexOf(column.Id) + ", IsUnique = true )]"); }
                             }
-                            if (pk != null && pk.ColumnIds.Contains(column.Id))
-                            { this.WriteLine("[Key]"); }
+                           // if (pk != null && pk.ColumnIds.Contains(column.Id))
+                           // { this.WriteLine("[Key]"); }
                             this.WriteLine("[Description(\"" + column.DisplayName.Replace("\"", "\\\"") + "\")]");
                             this.WriteLine("[Column(\"" + columnName + "\",Order=" + columnOrder + ")]");
                             if (!column.AllowNull)
@@ -139,8 +145,8 @@ namespace Emash.GeoPat.Generator.IO
                                 if (uk.ColumnIds.Contains(column.Id))
                                 { this.WriteLine("[Index(\"UQ_" + uk.Name + "\"," + uk.ColumnIds.IndexOf(column.Id) + " , IsUnique = true)]"); }
                             }
-                            if (pk != null && pk.ColumnIds.Contains(column.Id))
-                            { this.WriteLine("[Key]"); }
+                          //  if (pk != null && pk.ColumnIds.Contains(column.Id))
+                           // { this.WriteLine("[Key]"); }
                             this.WriteLine("[Description(\"" + column.DisplayName.Replace("\"", "\\\"") + "\")]");
                             this.WriteLine("[Column(\"" + columnName + "\",Order=" + columnOrder + ")]");
                             if (!column.AllowNull)
@@ -196,8 +202,8 @@ namespace Emash.GeoPat.Generator.IO
                                 if (uk.ColumnIds.Contains(column.Id))
                                 { this.WriteLine("[Index(\"UQ_" + uk.Name + "\"," + uk.ColumnIds.IndexOf(column.Id) + ", IsUnique = true )]"); }
                             }
-                            if (pk != null && pk.ColumnIds.Contains(column.Id))
-                            { this.WriteLine("[Key]"); }
+                            //if (pk != null && pk.ColumnIds.Contains(column.Id))
+                          //  { this.WriteLine("[Key]"); }
                             this.WriteLine("[Description(\"" + column.DisplayName.Replace("\"", "\\\"") + "\")]");
                             this.WriteLine("[Column(\"" + columnName + "\",Order=" + columnOrder + ")]");
                             if (!column.AllowNull)
@@ -219,8 +225,8 @@ namespace Emash.GeoPat.Generator.IO
                                 if (uk.ColumnIds.Contains(column.Id))
                                 { this.WriteLine("[Index(\"UQ_" + uk.Name + "\"," + uk.ColumnIds.IndexOf(column.Id) + " , IsUnique = true)]"); }
                             }
-                            if (pk != null && pk.ColumnIds.Contains(column.Id))
-                            { this.WriteLine("[Key]"); }
+                           // if (pk != null && pk.ColumnIds.Contains(column.Id))
+                          //  { this.WriteLine("[Key]"); }
                             this.WriteLine("[Description(\"" + column.DisplayName.Replace("\"", "\\\"") + "\")]");
                             this.WriteLine("[Column(\"" + columnName + "\",Order=" + columnOrder + ")]");
                             if (!column.AllowNull)
