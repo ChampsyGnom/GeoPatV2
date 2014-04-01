@@ -104,7 +104,6 @@
       <Name>Shared</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <Page Include="Views\AddDatabaseDialog.xaml">
       <Generator>MSBuild:Compile</Generator>

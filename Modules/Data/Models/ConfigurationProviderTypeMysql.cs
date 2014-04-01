@@ -22,11 +22,6 @@ namespace Emash.GeoPat.Modules.Data.Models
             get { return "MySql"; }
         }
 
-        public override bool TryConnect(Layers.Shared.Models.ConfigurationDatabase configurationDatabase, string login, string password)
-        {
-            throw new NotImplementedException();
-        }
-
         public override System.Data.Common.DbConnection CreateConnection(ConfigurationDatabase configurationDatabase, string login, string password)
         {
             throw new NotImplementedException();

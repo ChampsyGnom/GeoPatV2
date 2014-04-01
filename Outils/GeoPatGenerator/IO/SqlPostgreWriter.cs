@@ -26,7 +26,7 @@ namespace Emash.GeoPat.Generator.IO
             String appPath = System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
             DirectoryInfo directory = new DirectoryInfo(appPath);
             DirectoryInfo directoryCode = directory;
-            while (!directoryCode.Name.Equals("GeoPat"))
+            while (!directoryCode.Name.Equals("GeoPatV2"))
             { directoryCode = directoryCode.Parent; }
             String directorySql = Path.Combine(directoryCode.FullName, "Sql");
             String fileName = Path.Combine(directorySql, "Postgre.sql");
@@ -39,10 +39,14 @@ namespace Emash.GeoPat.Generator.IO
                      foreach (DbSchema schema in this.Project.Schemas)
                      {
                          this.WriteLine("DROP SCHEMA "+schema.Name+" CASCADE;");
+                         this.WriteLine("DROP ROLE " + schema.Name + "_ADMIN;");                     
+                         this.WriteLine("DROP ROLE " + schema.Name + "_CONSULT;");
                      }
                      this.WriteLine("");
                      foreach (DbSchema schema in this.Project.Schemas)
                      {
+                         this.WriteLine("CREATE USER " + schema.Name + "_ADMIN WITH PASSWORD '" + schema.Name + "_ADMIN';");
+                         this.WriteLine("CREATE USER " + schema.Name + "_CONSULT WITH PASSWORD '" + schema.Name + "_CONSULT';");                       
                          this.WriteLine("CREATE SCHEMA " + schema .Name+ " AUTHORIZATION postgres;");
                          this.WriteLine("COMMENT ON SCHEMA " + schema.Name + " IS '"+schema.DisplayName .Replace ("'","''")+"';");
                      }
@@ -53,27 +57,7 @@ namespace Emash.GeoPat.Generator.IO
                          this.WriteLine("");
                          foreach (DbTable table in schema.Tables)
                          {
-                             /*
-                              * CREATE TABLE INF.INF_ACCIDENT
-(
-INF_ACCIDENT__ANNEE integer NOT NULL,
-INF_ACCIDENT__ABS_DEB integer NOT NULL,
-INF_ACCIDENT__ABS_FIN integer,
-INF_ACCIDENT__ID serial NOT NULL,
-INF_CHAUSSEE__ID integer NOT NULL,
-INF_ACCIDENT__MOIS integer NOT NULL,
-INF_ACCIDENT__NB integer,
-INF_ACCIDENT__NB_MOIS integer
-);
-COMMENT ON TABLE INF.INF_ACCIDENT IS 'Accident';
-COMMENT ON COLUMN INF.INF_ACCIDENT.INF_ACCIDENT__ANNEE IS 'Année';
-COMMENT ON COLUMN INF.INF_ACCIDENT.INF_ACCIDENT__ABS_DEB IS 'Début';
-COMMENT ON COLUMN INF.INF_ACCIDENT.INF_ACCIDENT__ABS_FIN IS 'Fin';
-COMMENT ON COLUMN INF.INF_ACCIDENT.INF_ACCIDENT__ID IS 'Identifiant';
-COMMENT ON COLUMN INF.INF_ACCIDENT.INF_CHAUSSEE__ID IS 'Identifiant2';
-COMMENT ON COLUMN INF.INF_ACCIDENT.INF_ACCIDENT__MOIS IS 'Mois';
-COMMENT ON COLUMN INF.INF_ACCIDENT.INF_ACCIDENT__NB IS 'Nb accident';
-COMMENT ON COLUMN INF.INF_ACCIDENT.INF_ACCIDENT__NB_MOIS IS 'Nb accident par mois';*/
+                            
                              this.WriteLine("CREATE TABLE "+schema.Name+"."+table.Name+"");
                              this.WriteLine("(");
                              List<String> columnDefinitions = new List<string> ();
@@ -147,6 +131,16 @@ COMMENT ON COLUMN INF.INF_ACCIDENT.INF_ACCIDENT__NB_MOIS IS 'Nb accident par moi
                          
                              //ALTER TABLE INF.INF_ACCIDENT ADD CONSTRAINT INF_CHAUSSEE__INF_ACCIDENT FOREIGN KEY (INF_CHAUSSEE__ID) 
 //REFERENCES INF.INF_CHAUSSEE (INF_CHAUSSEE__ID) MATCH SIMPLE ON UPDATE CASCADE ON DELETE CASCADE;
+                         }
+                     }
+                     foreach (DbSchema schema in this.Project.Schemas)
+                     {
+                         this.WriteLine("");
+                         foreach (DbTable table in schema.Tables)
+                         {
+                             this.WriteLine("GRANT INSERT,DELETE,UPDATE ON " + schema .Name+ "."+table.Name+" TO "+schema.Name+"_ADMIN;");
+                             this.WriteLine("GRANT SELECT ON " + schema.Name + "." + table.Name + " TO " + schema.Name + "_CONSULT;");
+                             this.WriteLine("GRANT " + schema.Name + "_CONSULT TO " + schema.Name + "_ADMIN;");
                          }
                      }
                  }

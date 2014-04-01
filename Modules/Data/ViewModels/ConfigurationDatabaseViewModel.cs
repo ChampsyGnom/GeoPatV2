@@ -24,10 +24,21 @@ namespace Emash.GeoPat.Modules.Data.ViewModels
         public ConfigurationDatabaseViewModel()
         {
             this.ProviderTypes = new ObservableCollection<ConfigurationProviderType>();
-            Assembly assembly = Assembly.Load("Oracle.DataAccess");
-            if (assembly != null)
-            { this.ProviderTypes.Add(new ConfigurationProviderTypeOracle()); }
-            this.ProviderTypes.Add(new ConfigurationProviderTypePostgre());
+            try
+            {
+                Assembly assembly = Assembly.Load("Oracle.DataAccess");
+                if (assembly != null)
+                { this.ProviderTypes.Add(new ConfigurationProviderTypeOracle()); }
+            }
+            catch { }
+            try
+            {
+                Assembly assembly = Assembly.Load("Npgsql");
+                if (assembly != null)
+                { this.ProviderTypes.Add(new ConfigurationProviderTypePostgre()); }
+            }
+            catch { }
+           
             this.ProviderTypes.Add(new ConfigurationProviderTypeMysql());
         }
     }
