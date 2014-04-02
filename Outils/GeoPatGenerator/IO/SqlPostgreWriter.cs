@@ -54,6 +54,7 @@ namespace Emash.GeoPat.Generator.IO
 
                      foreach (DbSchema schema in this.Project.Schemas)
                      {
+                         String schemaCamelCase = schema.Name.ToCamelCase("_");
                          this.WriteLine("");
                          foreach (DbTable table in schema.Tables)
                          {
@@ -62,6 +63,36 @@ namespace Emash.GeoPat.Generator.IO
                              this.WriteLine("(");
                              List<String> columnDefinitions = new List<string> ();
                              columnDefinitions.Add("\"ID_PK\" SERIAL");
+                             List<DbKeyForeign> fkChilds = (from fk in schema.ForeignKeys where fk.TableIdChild.Equals(table.Id) select fk).ToList();
+                             foreach (DbKeyForeign fkChild in fkChilds)
+                             {
+                                 DbTable parentTable = (from t in schema.Tables where t.Id.Equals(fkChild.TableIdParent) select t).FirstOrDefault();
+                                 DbTable childTable = (from t in schema.Tables where t.Id.Equals(fkChild.TableIdChild) select t).FirstOrDefault();
+                                 Boolean allowNull = true;
+                                 foreach (DbKeyForeignJoin j in fkChild.Joins)
+                                 {
+                                     DbColumn childColumn = (from c in childTable.Columns where c.Id.Equals(j.ColumnIdChild) select c).FirstOrDefault();
+                                     if (!childColumn.AllowNull)
+                                     { allowNull = false; }
+                                 }
+                                 String parentClassName = schemaCamelCase + parentTable.Name.ToCamelCase("_");
+                                 if (parentClassName.EndsWith(schemaCamelCase))
+                                 { parentClassName = parentClassName.Substring(0, parentClassName.Length - schemaCamelCase.Length); }
+                               
+                                 if (allowNull)
+                                 {
+                                     columnDefinitions.Add("\"" + parentTable .Name+ "_ID_PK\" INTEGER");
+                                   
+                                 }
+                                 else
+                                 {
+                                     columnDefinitions.Add("\"" + parentTable.Name + "_ID_PK\" INTEGER NOT NULL");
+                                 }
+                         
+
+                             }
+
+
                              foreach (DbColumn column in table.Columns)
                              {
                                  
@@ -148,7 +179,11 @@ namespace Emash.GeoPat.Generator.IO
                          {
                              this.WriteLine("GRANT INSERT,DELETE,UPDATE ON \"" + schema .Name+ "\".\""+table.Name+"\" TO \""+schema.Name+"_ADMIN\";");
                              this.WriteLine("GRANT SELECT ON \"" + schema.Name + "\".\"" + table.Name + "\" TO \"" + schema.Name + "_CONSULT\";");
+                             this.WriteLine("GRANT USAGE, SELECT ON SEQUENCE  \"" + schema.Name + "\".\"" + table.Name + "_ID_PK_seq\" TO \"" + schema.Name + "_CONSULT\";");
+                             this.WriteLine("GRANT USAGE, SELECT ON SEQUENCE  \"" + schema.Name + "\".\"" + table.Name + "_ID_PK_seq\" TO \"" + schema.Name + "_ADMIN\";");
                              this.WriteLine("GRANT \"" + schema.Name + "_CONSULT\" TO \"" + schema.Name + "_ADMIN\";");
+
+                            
                          }
                      }
                  }

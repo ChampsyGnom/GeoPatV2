@@ -66,11 +66,34 @@ namespace Emash.GeoPat.Generator.IO
                     foreach (DbKeyForeign fkChild in fkChilds)
                     {
                         DbTable parentTable = (from t in Schema.Tables where t.Id.Equals (fkChild.TableIdParent ) select t).FirstOrDefault();
+                        DbTable childTable = (from t in Schema.Tables where t.Id.Equals(fkChild.TableIdChild) select t).FirstOrDefault();
+                        Boolean allowNull = true;
+                        foreach (DbKeyForeignJoin j in fkChild.Joins)
+                        {
+                            DbColumn childColumn = (from c in childTable.Columns where c.Id.Equals (j.ColumnIdChild ) select c).FirstOrDefault();
+                            if (!childColumn.AllowNull)
+                            { allowNull = false; }
+                        }
                         String parentClassName = schemaCamelCase + parentTable.Name.ToCamelCase("_");
                         if (parentClassName.EndsWith(schemaCamelCase))
                         { parentClassName = parentClassName.Substring(0, parentClassName.Length - schemaCamelCase.Length); }
                         this.WriteLine("public virtual " + parentClassName + " " + parentClassName + " {get;set;}");
                         this.WriteLine("");
+                        if (allowNull)
+                        {
+                            this.WriteLine("[Column(\"" + parentTable.Name + "_ID_PK\",Order=" + columnOrder + ")]");
+                            columnOrder++;
+                            this.WriteLine("public Nullable<Int64> " + parentClassName + "IdPk {get;set;}");
+                        }
+                        else
+                        {
+                            this.WriteLine("[Required()]");
+                            this.WriteLine("[Column(\"" + parentTable.Name + "_ID_PK\",Order=" + columnOrder + ")]");
+                            columnOrder++;
+                            this.WriteLine("public Int64 " + parentClassName + "IdPk {get;set;}");
+                        }
+                        this.WriteLine("");
+                      
                     }
                     foreach (DbKeyForeign fkParent in fkParents)
                     {
@@ -83,7 +106,8 @@ namespace Emash.GeoPat.Generator.IO
                     }
 
                     this.WriteLine("[Key]");
-                    this.WriteLine("[Column(\"ID_PK\",Order=0)]");
+                    this.WriteLine("[Column(\"ID_PK\",Order=" + columnOrder + ")]");
+                    columnOrder++;
                     this.WriteLine("[Required()]");
                     this.WriteLine("public Int64 IdPk { get; set; }");
                     foreach (DbColumn column in Table.Columns)

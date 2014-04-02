@@ -120,20 +120,20 @@ namespace Emash.GeoPat.Generator.IO
                                     {
                                         if (isOptional)
                                         {
-                                            this.WriteLine("modelBuilder.Entity<" + className + ">().HasOptional<" + parentClassName + ">(c => c." + parentClassName + ").WithMany(t => t." + className + "s).HasForeignKey(u => new { " + String.Join(",", (from k in keys select "u." + k)) + " }).WillCascadeOnDelete(true);");
+                                            this.WriteLine("modelBuilder.Entity<" + className + ">().HasOptional<" + parentClassName + ">(c => c." + parentClassName + ").WithMany(t => t." + className + "s).HasForeignKey(u => new {u." + parentClassName + "IdPk }).WillCascadeOnDelete(true);");
                                         }
                                         else
-                                        { this.WriteLine("modelBuilder.Entity<" + className + ">().HasRequired<" + parentClassName + ">(c => c." + parentClassName + ").WithMany(t => t." + className + "s).HasForeignKey(u => new { " + String.Join(",", (from k in keys select "u." + k)) + " }).WillCascadeOnDelete(true);"); }
+                                        { this.WriteLine("modelBuilder.Entity<" + className + ">().HasRequired<" + parentClassName + ">(c => c." + parentClassName + ").WithMany(t => t." + className + "s).HasForeignKey(u => new { u." + parentClassName + "IdPk }).WillCascadeOnDelete(true);"); }
 
                                     }
                                     else
                                     {
                                         if (isOptional)
                                         {
-                                            this.WriteLine("modelBuilder.Entity<" + className + ">().HasOptional<" + parentClassName + ">(c => c." + parentClassName + ").WithMany(t => t." + className + "s).HasForeignKey(u => new { " + String.Join(",", (from k in keys select "u." + k)) + " }).WillCascadeOnDelete(false);");
+                                            this.WriteLine("modelBuilder.Entity<" + className + ">().HasOptional<" + parentClassName + ">(c => c." + parentClassName + ").WithMany(t => t." + className + "s).HasForeignKey(u => new { u." + parentClassName + "IdPk }).WillCascadeOnDelete(false);");
                                         }
                                         else
-                                        { this.WriteLine("modelBuilder.Entity<" + className + ">().HasRequired<" + parentClassName + ">(c => c." + parentClassName + ").WithMany(t => t." + className + "s).HasForeignKey(u => new { " + String.Join(",", (from k in keys select "u." + k)) + " }).WillCascadeOnDelete(false);"); }
+                                        { this.WriteLine("modelBuilder.Entity<" + className + ">().HasRequired<" + parentClassName + ">(c => c." + parentClassName + ").WithMany(t => t." + className + "s).HasForeignKey(u => new { u." + parentClassName + "IdPk }).WillCascadeOnDelete(false);"); }
                                     }
 
                                 }
@@ -145,6 +145,11 @@ namespace Emash.GeoPat.Generator.IO
                                     String childClassName = schemaCamelCase + childTable.Name.ToCamelCase("_");
                                     if (childClassName.EndsWith(schemaCamelCase))
                                     { childClassName = childClassName.Substring(0, childClassName.Length - schemaCamelCase.Length); }
+
+                                    DbTable parentTable = (from t in schema.Tables where t.Id.Equals(fkParent.TableIdParent) select t).FirstOrDefault();
+                                    String parentClassName = schemaCamelCase + parentTable.Name.ToCamelCase("_");
+                                    if (parentClassName.EndsWith(schemaCamelCase))
+                                    { parentClassName = parentClassName.Substring(0, parentClassName.Length - schemaCamelCase.Length); }
                                     List<String> keys = new List<string>();
                                     foreach (DbKeyForeignJoin j in fkParent.Joins)
                                     {
@@ -174,16 +179,16 @@ namespace Emash.GeoPat.Generator.IO
                                     if (fkParent.DeleteOnCascade)
                                     {
                                         if (isOptional)
-                                        { this.WriteLine("modelBuilder.Entity<" + className + ">().HasMany<" + childClassName + ">(c => c." + childClassName + "s).WithOptional(t => t." + className + ").HasForeignKey(u => new { " + String.Join(",", (from k in keys select "u." + k)) + " }).WillCascadeOnDelete(true);"); }
+                                        { this.WriteLine("modelBuilder.Entity<" + className + ">().HasMany<" + childClassName + ">(c => c." + childClassName + "s).WithOptional(t => t." + className + ").HasForeignKey(u => new {u." + parentClassName + "IdPk }).WillCascadeOnDelete(true);"); }
                                         else
-                                        { this.WriteLine("modelBuilder.Entity<" + className + ">().HasMany<" + childClassName + ">(c => c." + childClassName + "s).WithRequired(t => t." + className + ").HasForeignKey(u => new { " + String.Join(",", (from k in keys select "u." + k)) + " }).WillCascadeOnDelete(true);"); }
+                                        { this.WriteLine("modelBuilder.Entity<" + className + ">().HasMany<" + childClassName + ">(c => c." + childClassName + "s).WithRequired(t => t." + className + ").HasForeignKey(u => new {u." + parentClassName + "IdPk }).WillCascadeOnDelete(true);"); }
                                     }
                                     else
                                     {
                                         if (isOptional)
-                                        { this.WriteLine("modelBuilder.Entity<" + className + ">().HasMany<" + childClassName + ">(c => c." + childClassName + "s).WithOptional(t => t." + className + ").HasForeignKey(u => new { " + String.Join(",", (from k in keys select "u." + k)) + " }).WillCascadeOnDelete(false);"); }
+                                        { this.WriteLine("modelBuilder.Entity<" + className + ">().HasMany<" + childClassName + ">(c => c." + childClassName + "s).WithOptional(t => t." + className + ").HasForeignKey(u => new { u." + parentClassName + "IdPk  }).WillCascadeOnDelete(false);"); }
                                         else
-                                        { this.WriteLine("modelBuilder.Entity<" + className + ">().HasMany<" + childClassName + ">(c => c." + childClassName + "s).WithRequired(t => t." + className + ").HasForeignKey(u => new { " + String.Join(",", (from k in keys select "u." + k)) + " }).WillCascadeOnDelete(false);"); }
+                                        { this.WriteLine("modelBuilder.Entity<" + className + ">().HasMany<" + childClassName + ">(c => c." + childClassName + "s).WithRequired(t => t." + className + ").HasForeignKey(u => new { u." + parentClassName + "IdPk  }).WillCascadeOnDelete(false);"); }
                                     }
 
                                 }
@@ -205,7 +210,7 @@ namespace Emash.GeoPat.Generator.IO
 
                                     }
                                     this.WriteLine("modelBuilder.Entity<" + className + ">().ToTable(\"" + table.Name + "\",\"" + schema.Name + "\");");
-                                  //  this.WriteLine("modelBuilder.Entity<" + className + ">().HasKey(item => new {" + String.Join(",", (from s in keyStrings select "item." + s)) + " });");
+                                    this.WriteLine("modelBuilder.Entity<" + className + ">().HasKey(item => new {item.IdPk});");
                                     foreach (DbColumn column in table.Columns)
                                     {
                                         String propertyName = column.Name;
