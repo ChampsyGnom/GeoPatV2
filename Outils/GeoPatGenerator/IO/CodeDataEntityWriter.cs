@@ -77,8 +77,66 @@ namespace Emash.GeoPat.Generator.IO
                         String parentClassName = schemaCamelCase + parentTable.Name.ToCamelCase("_");
                         if (parentClassName.EndsWith(schemaCamelCase))
                         { parentClassName = parentClassName.Substring(0, parentClassName.Length - schemaCamelCase.Length); }
-                        this.WriteLine("public virtual " + parentClassName + " " + parentClassName + " {get;set;}");
+
+
+                        /*
+                         * private PrfBmProfil _prfBmProfil;
+
+        public virtual PrfBmProfil PrfBmProfil 
+        {
+            get
+            {
+                return this._prfBmProfil;
+            }
+            set
+            {
+                this._prfBmProfil = value;
+                this.BmProfilProfil = this._prfBmProfil.Profil;
+            }
+        }
+                         * */
+
+                        string parentVariableName = "_" + parentClassName.Substring(0, 1).ToLower() + parentClassName.Substring(1);
+                        this.WriteLine("private " + parentClassName + " " + parentVariableName + ";");
+                        this.WriteLine("public virtual " + parentClassName + " " + parentClassName + " ");
+                        this.WriteBracketOpen();
+                        this.WriteLine("get");
+                        this.WriteBracketOpen();
+                        this.WriteLine("return this." + parentVariableName + ";");
                         this.WriteLine("");
+                        this.WriteBracketClose();
+
+
+                        this.WriteLine("set");
+                        this.WriteBracketOpen();
+                        this.WriteLine("this." + parentVariableName + " = value;");
+                        foreach (DbKeyForeignJoin j in fkChild.Joins)
+                        {
+                            DbColumn colunmChild = (from c in childTable.Columns where c.Id.Equals (j.ColumnIdChild ) select c).FirstOrDefault();
+                            DbColumn colunmParent = (from c in parentTable.Columns where c.Id.Equals(j.ColumnIdParent) select c).FirstOrDefault();
+                            string propChildName = colunmChild.Name.ToCamelCase("_");
+                            string propParentName = colunmParent.Name.ToCamelCase("_");
+                            if (propParentName.StartsWith(parentClassName.Substring (Schema.Name.ToCamelCase ("_").Length)))
+                            {
+                                propParentName = propParentName.Substring(parentClassName.Substring(Schema.Name.Length).Length);
+                            }
+                            if (propParentName.StartsWith(Schema.Name.ToCamelCase("_")))
+                            {
+                                propParentName = propParentName.Substring(Schema.Name.Length);
+                            }
+                            this.WriteLine("this." + propChildName + " = this." + parentVariableName + "." + propParentName + ";");
+
+                        }
+                        this.WriteBracketClose();
+
+                        this.WriteBracketClose();
+                      
+                       
+                        this.WriteLine("");
+
+
+
+
                         if (allowNull)
                         {
                             this.WriteLine("[Column(\"" + parentTable.Name + "_ID_PK\",Order=" + columnOrder + ")]");

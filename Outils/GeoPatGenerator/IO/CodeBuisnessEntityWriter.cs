@@ -400,6 +400,89 @@ namespace GeoPatGenerator.IO
                     }
 
 
+                    /*/
+                     * public override string Error
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        public override string this[string columnName]
+        {
+            get { throw new NotImplementedException(); }
+        }
+                     * */
+                    this.WriteLine("public override string Error");
+                    this.WriteBracketOpen();
+                    this.WriteLine("get");
+                    this.WriteBracketOpen();
+                    this.WriteLine("List<String> errors = new List<String>();");
+                    foreach (DbColumn column in Table.Columns)
+                    {
+                        if (!nonMappedColumns.Contains(column))
+                        {
+                            String columnName = column.Name;
+                            if (columnName.StartsWith(Table.Name + "_"))
+                            { columnName = columnName.Substring(Table.Name.Length + 1); }
+                            if (columnName.StartsWith("_"))
+                            { columnName = columnName.Substring(1); }
+                            String propertyName = columnName;
+                            propertyName = propertyName.ToCamelCase("_");
+
+                            this.WriteLine("if (this[\"" + propertyName + "\"] != null)");
+                            this.WriteBracketOpen();
+                            this.WriteLine("errors.Add(\"" + column.DisplayName + " : \"+this[\"" + propertyName + "\"]" + ");");
+                            this.WriteBracketClose();
+                        }
+                    }
+                    this.WriteLine("if (errors.Count > 0)");
+                    this.WriteBracketOpen();
+                    this.WriteLine("return String.Join(\"\\r\\n\",errors);");
+                    this.WriteBracketClose();
+                    this.WriteLine("else return null;");
+                   
+
+                    this.WriteBracketClose();
+                    this.WriteBracketClose();
+
+
+
+                    this.WriteLine("public override string this[string columnName]");
+                    this.WriteBracketOpen();
+                    this.WriteLine("get");
+                    this.WriteBracketOpen();
+                    foreach (DbColumn column in Table.Columns)
+                    {
+                        if (!nonMappedColumns.Contains(column))
+                        {
+                            String columnName = column.Name;
+                            if (columnName.StartsWith(Table.Name + "_"))
+                            { columnName = columnName.Substring(Table.Name.Length + 1); }
+                            if (columnName.StartsWith("_"))
+                            { columnName = columnName.Substring(1); }
+                            String propertyName = columnName;
+                            propertyName = propertyName.ToCamelCase("_");
+
+                         
+                            this.WriteLine("if (columnName.Equals(\""+propertyName+"\"))");
+                            this.WriteBracketOpen();
+                            if (!column.AllowNull && column.DataType.StartsWith("VARCHAR"))                            
+                            {
+                                this.WriteLine("if (String.IsNullOrEmpty(this." + propertyName + "))");
+                                this.WriteBracketOpen();
+                                this.WriteLine("return \"valeur vide non autorisée\";");
+                                this.WriteBracketClose();
+                            }
+                            this.WriteBracketClose();
+                        }
+                    }
+                        
+
+                    this.WriteLine("return null;");
+                    this.WriteBracketClose();
+                    this.WriteBracketClose();
+
+
+
                     this.WriteBracketClose();
                     this.WriteBracketClose();
                 }

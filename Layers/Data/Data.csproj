@@ -68,6 +68,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataContextBase.cs" />
     <Compile Include="DataContextBsn.cs" />
     <Compile Include="DataContextChs.cs" />
     <Compile Include="DataContextDs.cs" />
@@ -79,6 +80,7 @@
     <Compile Include="DataContextOa.cs" />
     <Compile Include="DataContextOh.cs" />
     <Compile Include="DataContextPrf.cs" />
+    <Compile Include="DataContextPrf.Ext.cs" />
     <Compile Include="DataContextWeb.cs" />
     <Compile Include="ModelBase.cs" />
     <Compile Include="Models\BsnBpu.cs" />

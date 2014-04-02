@@ -170,20 +170,37 @@ namespace Emash.GeoPat.Generator.IO
 //REFERENCES INF.INF_CHAUSSEE (INF_CHAUSSEE__ID) MATCH SIMPLE ON UPDATE CASCADE ON DELETE CASCADE;
                          }
                      }
+
                      foreach (DbSchema schema in this.Project.Schemas)
                      {
                          this.WriteLine("GRANT USAGE ON SCHEMA \"" + schema.Name + "\" TO \"" + schema.Name + "_ADMIN\";");
                          this.WriteLine("GRANT USAGE ON SCHEMA \"" + schema.Name + "\" TO \"" + schema.Name + "_CONSULT\";");
-                         
+                         this.WriteLine("GRANT \"" + schema.Name + "_CONSULT\" TO \"" + schema.Name + "_ADMIN\";");
                          foreach (DbTable table in schema.Tables)
                          {
                              this.WriteLine("GRANT INSERT,DELETE,UPDATE ON \"" + schema .Name+ "\".\""+table.Name+"\" TO \""+schema.Name+"_ADMIN\";");
                              this.WriteLine("GRANT SELECT ON \"" + schema.Name + "\".\"" + table.Name + "\" TO \"" + schema.Name + "_CONSULT\";");
                              this.WriteLine("GRANT USAGE, SELECT ON SEQUENCE  \"" + schema.Name + "\".\"" + table.Name + "_ID_PK_seq\" TO \"" + schema.Name + "_CONSULT\";");
                              this.WriteLine("GRANT USAGE, SELECT ON SEQUENCE  \"" + schema.Name + "\".\"" + table.Name + "_ID_PK_seq\" TO \"" + schema.Name + "_ADMIN\";");
-                             this.WriteLine("GRANT \"" + schema.Name + "_CONSULT\" TO \"" + schema.Name + "_ADMIN\";");
+                             foreach (DbSchema schemaOther in this.Project.Schemas)
+                             {
+                                 if (!schema.Name.Equals(schemaOther.Name))
+                                 {
+                                     this.WriteLine("GRANT INSERT,DELETE,UPDATE ON \"" + schema.Name + "\".\"" + table.Name + "\" TO \"" + schemaOther.Name + "_ADMIN\";");
+                                     this.WriteLine("GRANT USAGE, SELECT ON SEQUENCE  \"" + schema.Name + "\".\"" + table.Name + "_ID_PK_seq\" TO \"" + schemaOther.Name + "_ADMIN\";");
+                                 }
+                             }
 
                             
+                         }
+                         foreach (DbSchema schemaOther in this.Project.Schemas)
+                         {
+                             if (!schema.Name.Equals(schemaOther.Name))
+                             {
+                                 this.WriteLine("GRANT \"" + schema.Name + "_CONSULT\" TO  \"" + schemaOther.Name + "_CONSULT\";");
+                                 this.WriteLine("GRANT \"" + schema.Name + "_CONSULT\" TO  \"" + schemaOther.Name + "_ADMIN\";");
+                                 this.WriteLine("GRANT \"" + schema.Name + "_ADMIN\" TO  \"" + schemaOther.Name + "_ADMIN\";");
+                             }
                          }
                      }
                  }

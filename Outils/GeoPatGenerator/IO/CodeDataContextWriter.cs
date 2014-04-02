@@ -55,7 +55,7 @@ namespace Emash.GeoPat.Generator.IO
 
 
 
-                        this.WriteLine("public partial class DataContext" + schemaCamelCase + " : DbContext");
+                        this.WriteLine("public partial class DataContext" + schemaCamelCase + " : DataContextBase");
                         this.WriteBracketOpen();
                         this.WriteLine("public DataContext" + schemaCamelCase + "(DbConnection connection) : base(connection,false)");
                         this.WriteBracketOpen();

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Emash.GeoPat.Layers.Buisness
 {
-    public abstract class ViewModelBase<M> : INotifyPropertyChanged
+    public abstract class ViewModelBase<M> : INotifyPropertyChanged,IDataErrorInfo
     {
         public abstract void Read();
         public abstract void Write();
@@ -28,5 +28,15 @@ namespace Emash.GeoPat.Layers.Buisness
             this.Read();
         }
 
+
+        public abstract string Error
+        {
+            get;
+        }
+
+        public abstract string this[string columnName]
+        {
+            get;
+        }
     }
 }
